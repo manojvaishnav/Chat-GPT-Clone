@@ -1,3 +1,4 @@
+const fetch = require("node-fetch");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -30,15 +31,15 @@ exports.summeryController = async (req, res) => {
   //   });
   // }
   try {
-    const { txt } = req.body;
-    const key = "871292cd7fca6ac9673399a89a1702e3"; // Replace with your actual MeaningCloud API key
-    const limit = 5;
+    const { text } = req.body;
+    const formdata = new FormData();
+    formdata.append("key", "YOUR_MEANINGCLOUD_API_KEY"); // Replace with your actual MeaningCloud API key
+    formdata.append("txt", text);
+    formdata.append("limit", "5");
+
     const requestOptions = {
       method: "POST",
-      body: JSON.stringify({ key, txt, limit }), // Convert the body to JSON string
-      headers: {
-        "Content-Type": "application/json", // Specify the content type
-      },
+      body: formdata,
       redirect: "follow",
     };
 
@@ -49,15 +50,18 @@ exports.summeryController = async (req, res) => {
 
     if (response.ok) {
       const data = await response.json();
-      console.log(data);
-      return res.status(200).json(data);
+      return res.status(200).json(data.summary);
     } else {
-      console.log("Request failed with status:", response.status);
-      return res.status(500).json({ error: "Failed to summarize text" });
+      return res.status(404).json({
+        success: false,
+        message: "an error occured",
+      });
     }
   } catch (error) {
-    console.log("Error:", error.message);
-    return res.status(500).json({ error: "An error occurred" });
+    return res.status(404).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
 
