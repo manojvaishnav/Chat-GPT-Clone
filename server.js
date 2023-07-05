@@ -7,7 +7,6 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const errorHandler = require("./middleware/errorMiddleware");
 const path = require("path");
-const fetch = require("node-fetch");
 
 // routes path
 const authRoutes = require("./routes/authRoutes");

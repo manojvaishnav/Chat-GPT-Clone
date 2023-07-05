@@ -1,4 +1,4 @@
-const fetch = require("node-fetch");
+require("isomorphic-fetch");
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -33,7 +33,7 @@ exports.summeryController = async (req, res) => {
   try {
     const { text } = req.body;
     const formdata = new FormData();
-    formdata.append("key", "YOUR_MEANINGCLOUD_API_KEY"); // Replace with your actual MeaningCloud API key
+    formdata.append("key", process.env.MEANING_CLOUD_API_KEY);
     formdata.append("txt", text);
     formdata.append("limit", "5");
 
