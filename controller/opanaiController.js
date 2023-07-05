@@ -50,7 +50,7 @@ exports.summeryController = async (req, res) => {
 
     if (response.ok) {
       const data = await response.json();
-      return res.status(200).json({ data: data.summary });
+      return res.status(200).json(data.summary);
     } else {
       return res.status(404).json({
         success: false,
