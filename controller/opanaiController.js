@@ -50,14 +50,14 @@ exports.summeryController = async (req, res) => {
     if (response.ok) {
       const data = await response.json();
       console.log(data);
-      res.json(data);
+      return res.status(200).json(data);
     } else {
       console.log("Request failed with status:", response.status);
-      res.status(500).json({ error: "Failed to summarize text" });
+      return res.status(500).json({ error: "Failed to summarize text" });
     }
   } catch (error) {
     console.log("Error:", error.message);
-    res.status(500).json({ error: "An error occurred" });
+    return res.status(500).json({ error: "An error occurred" });
   }
 };
 
