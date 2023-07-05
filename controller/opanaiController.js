@@ -29,33 +29,35 @@ exports.summeryController = async (req, res) => {
   //     message: error.message,
   //   });
   // }
-  const formdata = new FormData();
-  // formdata.append("key", "871292cd7fca6ac9673399a89a1702e3");
-  // formdata.append("txt", "YOUR TEXT HERE");
-  // formdata.append("sentences", "NUMBER OF SENTENCES");
   try {
-    const txt = req.body.text;
-    const key = "871292cd7fca6ac9673399a89a1702e3";
+    const { txt } = req.body;
+    const key = "871292cd7fca6ac9673399a89a1702e3"; // Replace with your actual MeaningCloud API key
     const limit = 5;
     const requestOptions = {
       method: "POST",
-      body: { key, txt, limit },
+      body: JSON.stringify({ key, txt, limit }), // Convert the body to JSON string
+      headers: {
+        "Content-Type": "application/json", // Specify the content type
+      },
       redirect: "follow",
     };
-    const response = fetch(
+
+    const response = await fetch(
       "https://api.meaningcloud.com/summarization-1.0",
       requestOptions
     );
-    if (response) {
-      if (response.summery) {
-        return res.status(200).json(response.summery);
-      }
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data);
+      res.json(data);
+    } else {
+      console.log("Request failed with status:", response.status);
+      res.status(500).json({ error: "Failed to summarize text" });
     }
   } catch (error) {
-    return res.status(404).json({
-      success: false,
-      message: error.message,
-    });
+    console.log("Error:", error.message);
+    res.status(500).json({ error: "An error occurred" });
   }
 };
 
