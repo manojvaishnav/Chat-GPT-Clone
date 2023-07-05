@@ -8,22 +8,50 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 exports.summeryController = async (req, res) => {
-  try {
-    const { text } = req.body;
-    const { data } = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `summerize this \n ${text}`,
-      max_tokens: 500,
-      temperature: 0.5,
-    });
+  // try {
+  //   const { text } = req.body;
+  //   const { data } = await openai.createCompletion({
+  //     model: "text-davinci-003",
+  //     prompt: `summerize this \n ${text}`,
+  //     max_tokens: 500,
+  //     temperature: 0.5,
+  //   });
 
-    if (data) {
-      if (data.choices[0].text) {
-        return res.status(200).json(data.choices[0].text);
+  //   if (data) {
+  //     if (data.choices[0].text) {
+  //       return res.status(200).json(data.choices[0].text);
+  //     }
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  //   return res.status(404).json({
+  //     success: false,
+  //     message: error.message,
+  //   });
+  // }
+  const formdata = new FormData();
+  // formdata.append("key", "871292cd7fca6ac9673399a89a1702e3");
+  // formdata.append("txt", "YOUR TEXT HERE");
+  // formdata.append("sentences", "NUMBER OF SENTENCES");
+  try {
+    const txt = req.body.text;
+    const key = "871292cd7fca6ac9673399a89a1702e3";
+    const limit = 5;
+    const requestOptions = {
+      method: "POST",
+      body: { key, txt, limit },
+      redirect: "follow",
+    };
+    const response = fetch(
+      "https://api.meaningcloud.com/summarization-1.0",
+      requestOptions
+    );
+    if (response) {
+      if (response.summery) {
+        return res.status(200).json(response.summery);
       }
     }
   } catch (error) {
-    console.log(error);
     return res.status(404).json({
       success: false,
       message: error.message,
